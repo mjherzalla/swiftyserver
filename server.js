@@ -81,7 +81,7 @@ app.get("*", function (req, res) {
     if (file.length == 0) {
       res.send("file not found");
     } else {
-      res.send(JSON.parse(file.data));
+      res.send(JSON.parse(file[0].data));
     }
     if (err) return handleError(err);
   });

@@ -63,6 +63,30 @@ router.route("/getFile").get(function (req, res) {
     // athletes contains an ordered list of 5 athletes who play Tennis
   });
 });
+
+router.route("/deleteFile").get(function (req, res) {
+  jsonFile.deleteOne({ fileID: req.query.fileID }, function (err) {
+    if (!err) {
+      console.log(req.query.fileID + " was delete");
+      res.send("file was delete");
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+app.get("*", function (req, res) {
+  var query = jsonFile.find({ fileID: req.path.replace("/", "") });
+  query.exec(function (err, file) {
+    if (file.length == 0) {
+      res.send("file not found");
+    } else {
+      res.send(file);
+    }
+    if (err) return handleError(err);
+  });
+});
+
 router.route("/getFilesList").get(function (req, res) {
   // find all athletes that play tennis
   var query = jsonFile.find({ userID: req.query.userID });
@@ -92,4 +116,4 @@ router.route("/UpdateFile").get(function (req, res) {
   );
 });
 
-app.listen(process.env.PORT, function () {});
+app.listen(process.env.PORT || 3001, function () {});

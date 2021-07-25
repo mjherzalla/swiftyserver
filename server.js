@@ -92,6 +92,6 @@ router.route("/UpdateFile").get(function (req, res) {
   );
 });
 
-const server = app.listen(3001, () => {
-  console.log("listening on port %s...", server.address().port);
+app.listen(port, function () {
+  console.log("Our app is running on http://localhost:" + port);
 });

@@ -56,7 +56,7 @@ router.route("/File").get(function (req, res) {
     if (file.length == 0) {
       res.send("file notfound");
     } else {
-      res.send(file.data);
+      res.send(file[0].data);
     }
 
     if (err) return handleError(err);

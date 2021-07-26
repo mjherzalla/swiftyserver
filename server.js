@@ -75,18 +75,6 @@ router.route("/deleteFile").get(function (req, res) {
   });
 });
 
-app.get("*", function (req, res) {
-  var query = jsonFile.find({ fileID: req.path.replace("/", "") });
-  query.exec(function (err, file) {
-    if (file.length == 0) {
-      res.send("file not found");
-    } else {
-      res.send(JSON.parse(file[0].data));
-    }
-    if (err) return handleError(err);
-  });
-});
-
 router.route("/getFilesList").get(function (req, res) {
   // find all athletes that play tennis
   var query = jsonFile.find({ userID: req.query.userID });
@@ -104,6 +92,7 @@ router.route("/getFilesList").get(function (req, res) {
 });
 router.route("/UpdateFile").get(function (req, res) {
   var query = { fileID: req.query.fileID };
+  console.log("sss");
 
   jsonFile.findOneAndUpdate(
     query,
@@ -114,6 +103,18 @@ router.route("/UpdateFile").get(function (req, res) {
       return res.send("Succesfully saved.");
     }
   );
+});
+
+app.get("*", function (req, res) {
+  var query = jsonFile.find({ fileID: req.path.replace("/", "") });
+  query.exec(function (err, file) {
+    if (file.length == 0) {
+      res.send("file not found");
+    } else {
+      res.send(JSON.parse(file[0].data));
+    }
+    if (err) return handleError(err);
+  });
 });
 
 app.listen(process.env.PORT || 3001, function () {});

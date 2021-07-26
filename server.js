@@ -48,7 +48,7 @@ router.route("/CreateNew").get(function (req, res) {
   });
 });
 
-router.route("/getFile").get(function (req, res) {
+router.route("/File").get(function (req, res) {
   // find all athletes that play tennis
   var query = jsonFile.find({ fileID: req.query.fileID });
 
@@ -103,18 +103,6 @@ router.route("/UpdateFile").get(function (req, res) {
       return res.send("Succesfully saved.");
     }
   );
-});
-
-app.get("*", function (req, res) {
-  var query = jsonFile.find({ fileID: req.path.replace("/", "") });
-  query.exec(function (err, file) {
-    if (file.length == 0) {
-      res.send("file not found");
-    } else {
-      res.send(JSON.parse(file[0].data));
-    }
-    if (err) return handleError(err);
-  });
 });
 
 app.listen(process.env.PORT || 3001, function () {});

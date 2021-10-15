@@ -154,7 +154,7 @@ router.route("/updateCardListID").get(function (req, res) {
 });
 router.route("/assginUsertoCard").get(function (req, res) {
   var query = { cardID: req.query.cardID };
-  console.log(req.query.avatarColor);
+
   cardModel.findOneAndUpdate(
     query,
     {
@@ -177,6 +177,20 @@ router.route("/updateListTitle").get(function (req, res) {
   listModel.findOneAndUpdate(
     query,
     { listTitle: req.query.listTitle },
+    { upsert: true },
+    function (err, doc) {
+      if (err) return res.send(500, { error: err });
+      return res.send("Succesfully saved.");
+    }
+  );
+});
+
+router.route("/updateCard").get(function (req, res) {
+  var query = { cardID: req.query.cardID };
+
+  cardModel.findOneAndUpdate(
+    query,
+    { description: req.query.description },
     { upsert: true },
     function (err, doc) {
       if (err) return res.send(500, { error: err });

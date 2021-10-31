@@ -37,7 +37,6 @@ router.route("/createNewboard").get(function (req, res) {
   var data = {
     boardID: "1",
     boardTitle: "boardTitle",
-    users: [{ userName: "newuser", avatarColor: "piclink" }],
     pojectIconUrl: "pojectIconUrl",
   };
 

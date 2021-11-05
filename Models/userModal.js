@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 
 let user = new Schema(
   {
+    userID: {
+      type: String,
+    },
     userName: {
       type: String,
     },
@@ -11,7 +14,7 @@ let user = new Schema(
       type: String,
     },
   },
-  { collection: "OsmosUsers" }
+  { collection: "swiftyUsers" }
 );
 
-module.exports = mongoose.model("OsmosUsers", user);
+module.exports = mongoose.model("swiftyUsers", user);

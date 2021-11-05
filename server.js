@@ -3,7 +3,7 @@ const app = express();
 const { MongoClient } = require("mongodb");
 const mongoose = require("mongoose");
 
-const boardModel = require("./Models/boardModel");
+const templetModel = require("./Models/templetModel");
 const cardModel = require("./Models/cardModel");
 const listModel = require("./Models/listModel");
 const userModel = require("./Models/userModal");
@@ -18,7 +18,7 @@ app.use(function (req, res, next) {
   next();
 });
 const uri =
-  "mongodb+srv://milagro:moon2006@cluster0.vcm9w.mongodb.net/osmos?retryWrites=true&w=majority";
+  "mongodb+srv://milagro:moon2006@cluster0.vcm9w.mongodb.net/swifty?retryWrites=true&w=majority";
 
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -33,80 +33,46 @@ connection.once("open", function () {
 
 app.use("/", router);
 
-router.route("/createNewboard").get(function (req, res) {
-  var data = {
-    boardID: "1",
-    boardTitle: "boardTitle",
-    pojectIconUrl: "pojectIconUrl",
-  };
-
-  const newboard = new boardModel(data);
-
-  newboard.save(function (err) {
-    if (err) return console.log(err);
-    // saved!
-    res.send("New board created succesfully");
-  });
-});
-
-router.route("/createNewList").get(function (req, res) {
-  var data = {
-    listID: req.query.listID || "",
-    listTitle: req.query.listTitle || "title",
-    listStatus: req.query.listStatus || "On",
-  };
-  const newList = new listModel(data);
-
-  newList.save(function (err) {
-    if (err) return console.log(err);
-    // saved!
-    res.send("New list created Succesfully");
-  });
-});
-
-router.route("/createNewCard").get(function (req, res) {
+router.route("/newTemplet").get(function (req, res) {
   var dateObj = new Date();
   var month = dateObj.getUTCMonth() + 1; //months from 1-12
   var day = dateObj.getUTCDate();
-
+  var year = dateObj.getUTCFullYear();
   var data = {
-    cardID: Math.random().toString(36).substr(2, 9),
-    listID: req.query.listID,
+    templetID: Math.random().toString(36).substr(2, 9),
     title: req.query.title,
-    description: "description",
-    status: "status",
-    assignedTo: { userName: "none", avatarColor: "" },
-    date: month + "/" + day,
-    priority: req.query.priority,
+    plateform: req.query.plateform,
+    code: req.query.code,
+    tags: "",
+    date: month + "/" + day + "/" + year,
+    createdBy: req.query.createdBy,
+    usedCount: 0,
   };
-  const newCard = new cardModel(data);
 
-  newCard.save(function (err) {
+  const newTemplet = new templetModel(data);
+
+  newTemplet.save(function (err) {
     if (err) return console.log(err);
     // saved!
-    res.send("New card created Succesfully");
+    res.send("New templet created succesfully");
   });
 });
-router.route("/getLists").get(function (req, res) {
-  listModel.find({}, function (err, lists) {
+
+router.route("/getTemplets").get(function (req, res) {
+  let data = {};
+  if (req._parsedUrl.query != null) {
+    let temp = req._parsedUrl.query.split("=");
+    let t1 = temp[0];
+    let t2 = temp[1];
+    data[t1] = t2;
+  }
+  console.log(data);
+  templetModel.find(data, function (err, lists) {
     if (err) return handleError(err);
     res.send(lists);
   });
 });
 
-router.route("/getCards").get(function (req, res) {
-  cardModel.find({}, function (err, lists) {
-    if (err) return handleError(err);
-    res.send(lists);
-  });
-});
-
-router.route("/getBoards").get(function (req, res) {
-  boardModel.find({}, function (err, lists) {
-    if (err) return handleError(err);
-    res.send(lists);
-  });
-});
 router.route("/getUsers").get(function (req, res) {
   userModel.find({}, function (err, lists) {
     if (err) return handleError(err);
